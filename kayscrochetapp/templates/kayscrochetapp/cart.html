@@ -1,0 +1,400 @@
+{% extends 'base_generic.html' %}
+{% load custom_filters %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+    
+<style>
+    #full_name::placeholder, #street::placeholder, #city::placeholder, #zip_code::placeholder {
+        color: hsl(270, 50%, 60%);
+        opacity: 1;}
+</style>
+
+    <h5><button type="button" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'" 
+                onmouseout="this.style.boxShadow='none'" class="button ms-2" onclick="window.location.href = '{% url 'kayscrochetapp:index' %}'" 
+                title="Add Items" style="color: hsl(270, 50%, 60%);"><i class="fa fa-plus" style="margin: .125rem"></i>ITEMS</button></h5>
+<form method="post" id="removeItemForm">
+    {% csrf_token %}
+    <fieldset style="color: hsl(270, 50%, 60%); border: 0.0625rem solid hsl(270, 50%, 60%);">
+        <legend><h1 style="text-transform: uppercase; color: hsl(270, 50%, 60%);
+          text-shadow: 2px 2px 6px rgba(100, 100, 150, 0.9);
+          background: linear-gradient(90deg, hsl(270, 50%, 60%), hsl(270, 50%, 80%));
+          -webkit-background-clip: text;
+          background-clip: text;">Cart</h1></legend>
+      {% if items %}
+        <ul style="">
+          {% for cart_item in items %}
+           <li id="item_{{ cart_item.item.pk }}">
+           
+                {% if cart_item.item.is_sold and cart_item.item.is_preorder %}
+                    <h4 style="text-transform: uppercase;">{{ cart_item.item.item_title }} - PREORDER</h4>
+                {% else %}
+                    <h4 style="text-transform: uppercase;">{{ cart_item.item.item_title }}</h4>
+                {% endif %}
+           
+                {% if cart_item.item.image %}
+                    <img src="{{ cart_item.item.image.url }}" alt="{{ cart_item.item.item_title }}" title="{{ item.item_title }}"
+                         style="max-height: 60vh; width: 40%; height: auto; border: 0.1rem solid hsl(270, 50%, 60%); border-radius: 0.3125rem;">
+                {% endif %}<br>
+           
+                Quantity: {{ cart_item.quantity }}<br>
+                Price Each: ${{ cart_item.price|floatformat:2 }}<br>
+                {% if cart_item.total_price %}
+                    Total Price: ${{ cart_item.total_price|floatformat:2 }}
+                            <!-- Store the price of the removed item -->
+                    <span id="removedItemPrice" style="display: none;">{{ cart_item.total_price|floatformat:2 }}</span>
+                {% endif %}
+           
+               <div class="d-flex justify-content-left align-items-center">
+                   <div>
+                        <button onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'" onmouseout="this.style.boxShadow='none'">
+                            <a href="{% url 'kayscrochetapp:detail' cart_item.item.id %}" style="text-decoration: none;
+                            color: hsl(270, 50%, 60%);" title="Go Back To Item's Details">EDIT</a></button>
+                   </div>
+                   <div>
+                        <button type="button" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                                onmouseout="this.style.boxShadow='none'" onclick="removeItem('{{ cart_item.item.pk }}')"
+                                style="color: hsl(270, 50%, 60%);" title="Remove The Item From The Cart">REMOVE</button>
+                   </div>
+               </div>
+            </li>
+          {% endfor %}
+        </ul>
+        {% if items|sum_attribute:'total_price' %}
+            <h3>Total Cart Price:</h3><p id="totalCartPrice"> ${{ items|sum_attribute:'total_price'|floatformat:2 }}</p>
+            <p>Sales tax is not included.<br>Shipping is included for the US only. <br>Items are not shipped outside the US.
+                <br>There are no refunds and no returns.</p>
+        <fieldset style="border: 0.0625rem solid hsl(270, 50%, 60%);">
+            <legend><h3 style="text-transform: uppercase;">ADDRESS FORM</h3></legend>
+            <!-- Add Address Form -->
+            <label for="full_name" >Full Name:</label>
+            <input class="custom-placeholder" type="text" id="full_name" name="full_name" placeholder="Please enter full name" required><br>
+            <label for="street">Street:</label>
+            <input type="text" id="street" name="street" placeholder="Please enter street" required><br>
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" placeholder="Please enter city" required><br>
+            <label for="state">State:</label>
+            <select id="state" name="state" required style="border: 0.0625rem solid hsl(270, 50%, 60%); 
+            color: hsl(270, 50%, 60%); height: 2rem; border-radius: 0.3125rem; background-color: #F7E7F8; margin: .5rem;">
+                <option value="Alabama">Alabama</option>
+                <option value="Alaska">Alaska</option>
+                <option value="Arizona">Arizona</option>
+                <option value="Arkansas">Arkansas</option>
+                <option value="California">California</option>
+                <option value="Colorado">Colorado</option>
+                <option value="Connecticut">Connecticut</option>
+                <option value="Delaware">Delaware</option>
+                <option value="Florida">Florida</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Hawaii">Hawaii</option>
+                <option value="Idaho">Idaho</option>
+                <option value="Illinois">Illinois</option>	
+                <option value="Indiana">Indiana</option>
+                <option value="Iowa">Iowa</option>
+                <option value="Kansas">Kansas</option>
+                <option value="Kentucky">Kentucky</option>
+                <option value="Louisiana">Louisiana</option>
+                <option value="Maine">Maine</option>
+                <option value="Maryland">Maryland</option>
+                <option value="Massachusetts">Massachusetts</option>
+                <option value="Michigan">Michigan</option>
+                <option value="Minnesota">Minnesota</option>
+                <option value="Mississippi">Mississippi</option>
+                <option value="Missouri">Missouri</option>
+                <option value="Montana">Montana</option>
+                <option value="Nebraska">Nebraska</option>
+                <option value="Nevada">Nevada</option>
+                <option value="New Hampshire">New Hampshire</option>
+                <option value="New Jersey">New Jersey</option>
+                <option value="New Mexico">New Mexico</option>
+                <option value="New York">New York</option>
+                <option value="North Carolina">North Carolina</option>
+                <option value="North Dakota">North Dakota</option>
+                <option value="Ohio">Ohio</option>
+                <option value="Oklahoma">Oklahoma</option>
+                <option value="Oregon">Oregon</option>
+                <option value="Pennsylvania">Pennsylvania</option>
+                <option value="Rhode Island">Rhode Island</option>	
+                <option value="South Carolina">South Carolina</option>
+                <option value="South Dakota">South Dakota</option>
+                <option value="Tennessee">Tennessee</option>
+                <option value="Texas">Texas</option>
+                <option value="Utah">Utah</option>
+                <option value="Vermont">Vermont</option>
+                <option value="Virginia">Virginia</option>
+                <option value="Washington">Washington</option>
+                <option value="DC">DC</option>
+                <option value="West Virginia">West Virginia</option>
+                <option value="Wisconsin">Wisconsin</option>
+                <option value="Wyoming">Wyoming</option>
+            </select><br>
+            <label for="zip_code" style="margin-top: 1rem">Zip Code:</label>
+            <input type="text" id="zip_code" name="zip_code" placeholder="Please enter zip code" required><br>
+        </fieldset>
+        <fieldset style="border: 0.0625rem solid hsl(270, 50%, 60%);">
+            <legend><h3>CREDIT/DEBIT CARD</h3></legend>
+            <!-- Add Stripe Payment Form -->
+            <form id="stripe-form">
+                <input type="hidden" name="total_price" value="{{ items|sum_attribute:'total_price'|floatformat:2 }}">
+
+                <div id="card-element"></div>
+                <div class="d-flex justify-content-left align-items-center">
+                    <button id="submit-button" type="button" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                            onmouseout="this.style.boxShadow='none'" style="color: hsl(270, 50%, 60%);" title="Buy Item Now">BUY</button>
+                    
+                </div>
+                <p>A receipt will be emailed to you.</p>
+            </form>
+        </fieldset>
+        {% else %}
+          <p>Total Cart Price: $0.00</p>
+        {% endif %}
+      {% else %}
+        <p>Your cart is empty.</p>
+      {% endif %}
+    </fieldset>
+</form>
+<h5><button type="button" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'" onmouseout="this.style.boxShadow='none'"
+            class="button ms-2" onclick="window.location.href = '{% url 'kayscrochetapp:index' %}'" 
+                 title="Add Items" style="color: hsl(270, 50%, 60%);">
+                    <i class="fa fa-plus" style="margin: .125rem"></i>ITEMS</button></h5>
+
+<!-- Include Stripe.js script -->
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+async function createPaymentIntent(amount) {
+    try {
+        // Ensure the amount is at least $0.50
+        const totalAmount = Math.max(0.5, parseFloat(amount) / 100);  // Convert cents to dollars
+        const totalAmountCents = Math.max(50, Math.ceil(amount));
+
+        const response = await fetch('{% url 'kayscrochetapp:create_payment_intent' %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: new URLSearchParams({
+                amount: totalAmountCents,
+            }),
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            return responseData.clientSecret;
+        } else {
+            console.error('Failed to create PaymentIntent');
+            return null;
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+        return null;
+    }
+}
+
+
+async function removeItem(itemId) {
+    try {
+        // Use fetch to submit the form asynchronously
+        const response = await fetch('{% url 'kayscrochetapp:remove_from_cart' item_id=0 %}'.replace('0', itemId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+        });
+
+        // Check if the response indicates success
+        if (response.ok) {
+            console.log('Item removed successfully');
+
+            // Get the removed item's total price from the response
+            const responseData = await response.json();
+            const removedItemTotalPrice = parseFloat(responseData.removed_item_total_price);
+
+            // Update the total cart price
+            updateTotalCartPrice(removedItemTotalPrice);
+
+            // Attempt to remove the item from the DOM after a short delay
+            setTimeout(function() {
+                var itemElement = document.getElementById('item_' + itemId);
+                if (itemElement) {
+                    console.log('Removing item with ID: ' + itemId);
+                    itemElement.remove();
+                } else {
+                    console.log('Item with ID ' + itemId + ' not found in the DOM');
+                }
+            }, 300);  // Adjust the delay
+        } else {
+            console.error('Item removal failed with status:', response.status);
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+}
+
+async function updateTotalCartPrice(removedItemTotalPrice) {
+    try {
+        // Get the total cart price element
+        var totalCartPriceElement = document.getElementById('totalCartPrice');
+
+        if (totalCartPriceElement) {
+            // Get the current total cart price
+            var currentTotalCartPrice = parseFloat(totalCartPriceElement.innerText.replace('$', '').trim());
+
+            // Subtract the removed item's total price from the current total cart price
+            var newTotalCartPrice = isNaN(currentTotalCartPrice) ? 0 : Math.max(0, currentTotalCartPrice - removedItemTotalPrice);
+
+            // Update the total cart price element
+            totalCartPriceElement.innerText = '$' + newTotalCartPrice.toFixed(2);
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+}
+</script>
+<script>
+var stripePublishableKey = '{{ STRIPE_PUBLIC_KEY }}';
+
+// Initialize Stripe.js
+var stripe = Stripe(stripePublishableKey);
+var elements = stripe.elements();
+
+// Create an instance of the card Element
+var card = elements.create('card');
+
+// Add an instance of the card Element into the `card-element` div
+card.mount('#card-element');
+
+// Create a payment request object
+var paymentRequest = stripe.paymentRequest({
+    country: 'US',
+    currency: 'usd',
+    total: {
+        label: 'Total',
+        amount: parseInt('{{ items|sum_attribute:"total_price"|floatformat:2 }}' * 100),
+    },
+    requestPayerName: true,
+    requestPayerEmail: true,
+});
+
+// Create an instance of the Payment Request Button
+var prButton = elements.create('paymentRequestButton', {
+    paymentRequest: paymentRequest,
+});
+
+// Check if the Payment Request API is available
+paymentRequest.canMakePayment().then(function(result) {
+    if (result) {
+        prButton.mount('#payment-request-button');
+    } else {
+        document.getElementById('payment-request-button').style.display = 'none';
+    }
+});
+
+// Handle the payment method returned from the payment request
+paymentRequest.on('paymentmethod', function(event) {
+    // Confirm the PaymentIntent with the payment method returned from the payment request
+    stripe.confirmCardPayment(clientSecret, {
+        payment_method: event.paymentMethod.id
+    }).then(function(result) {
+        if (result.error) {
+            // Handle errors
+        } else {
+            if (result.paymentIntent.status === 'succeeded') {
+                                // Redirect to success page
+                window.location.href = '{% url 'kayscrochetapp:success' %}';
+            }
+        }
+    });
+});
+
+document.getElementById('submit-button').addEventListener('click', async function() {
+    try {
+        // Calculate the total amount
+        const totalAmount = parseFloat('{{ items|sum_attribute:'total_price'|floatformat:2 }}');
+        const totalAmountCents = Math.max(50, Math.ceil(totalAmount * 100));
+
+        // Create PaymentIntent
+        const clientSecret = await createPaymentIntent(totalAmountCents);
+
+        if (!clientSecret) {
+            console.error('Failed to retrieve PaymentIntent client secret');
+            return;
+        }
+
+        const { paymentIntent, error } = await stripe.confirmCardPayment(
+            clientSecret,
+            {
+                payment_method: {
+                    card: card
+                },
+            }
+        );
+
+        if (error) {
+            // Show error to customer
+            console.error(error.message);
+        } else {
+            // The payment succeeded
+            if (paymentIntent.status === 'succeeded') {
+                // Clear the cart on successful payment
+                await clearCart();
+
+                // Redirect to success page
+                window.location.href = '{% url 'kayscrochetapp:success' %}';
+            }
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+});
+
+async function clearCart() {
+    try {
+        // Get user information from input fields
+        const fullName = document.getElementById('full_name').value;
+        const street = document.getElementById('street').value;
+        const city = document.getElementById('city').value;
+        const state = document.getElementById('state').value;
+        const zipCode = document.getElementById('zip_code').value;
+
+        // Use fetch to submit the form asynchronously
+        const response = await fetch('{% url 'kayscrochetapp:clear_cart' %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+                body: new URLSearchParams({
+                full_name: fullName,
+                street: street,
+                city: city,
+                state: state,
+                zip_code: zipCode,
+            }),
+        });
+
+        // Check if the response indicates success
+        if (response.ok) {
+            console.log('Cart cleared successfully');
+        } else {
+            console.error('Cart clearance failed with status:', response.status);
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+}
+</script>
+<script>
+document.getElementById('submit-button').addEventListener('click', function(event) {
+    var state = document.getElementById('state').value;
+    if (!state) {
+        alert('Please select a state.');
+        event.preventDefault(); 
+    }
+});
+</script>
+
+{% endblock %}

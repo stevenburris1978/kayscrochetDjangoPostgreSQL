@@ -1,0 +1,194 @@
+{% extends 'base_generic.html' %}
+{% load custom_filters %}
+
+{% block title %}{{ item.item_title }} Details{% endblock %}
+
+{% if user.is_authenticated %}
+{% block content %}
+{% if not item.is_sold and not item.is_preorder %}
+    <form method="post" action="{% url 'kayscrochetapp:add_to_cart' pk=item.pk %}">
+        {% csrf_token %}
+        <div style="display: flex; align-items: center; padding-left: 1rem">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" max="{{ item.total_quantity }}" value="1">
+            
+            <button onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'" onmouseout="this.style.boxShadow='none'" type="submit"
+                    title="Add To Cart" style="color: hsl(270, 50%, 60%);">
+                <i class="fas fa-cart-plus fa-lg"></i>
+            </button>
+        </div>
+    </form>
+{% elif item.is_sold and item.is_preorder %}
+<form method="post" action="{% url 'kayscrochetapp:add_to_cart' pk=item.pk %}">
+    {% csrf_token %}
+    <div style="display: flex; align-items: center; padding-left: 1rem">
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" min="1" value="1"> 
+        <button type="submit" style="color: hsl(270, 50%, 60%);" 
+                onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'" 
+                onmouseout="this.style.boxShadow='none'">PREORDER</button>
+    </div>
+</form>
+{% elif not item.is_sold and item.is_preorder %}
+    <form method="post" action="{% url 'kayscrochetapp:add_to_cart' pk=item.pk %}">
+        {% csrf_token %}
+        <div style="display: flex; align-items: center; padding-left: 1rem">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" max="{{ item.total_quantity }}" value="1">
+            
+            <button onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'" onmouseout="this.style.boxShadow='none'" type="submit"
+                    title="Add To Cart" style="color: hsl(270, 50%, 60%);">
+                <i class="fas fa-cart-plus fa-lg"></i>
+            </button>
+        </div>
+    </form>
+{% endif %}
+
+<form action="{% url 'kayscrochetapp:like' item.id %}" method="post">
+{% csrf_token %}
+    <fieldset style="color: hsl(270, 50%, 60%); border: 0.0625rem solid hsl(270, 50%, 60%);">
+        <legend style="margin-bottom: 0"><h3 style="text-transform: uppercase;   color: hsl(270, 50%, 60%);
+              text-shadow: 2px 2px 6px rgba(100, 100, 150, 0.9); /* Darkened shadow color and closer position */
+              background: linear-gradient(90deg, hsl(270, 50%, 60%), hsl(270, 50%, 80%));
+              -webkit-background-clip: text;
+              background-clip: text;">{{ item.item_title }}</h3></legend>
+        {% if item.total_quantity > 0 %}
+            <div><p>  {{ item.total_quantity }} still available</p></div>
+        {% else %}
+            <div><p>Out of Stock</p></div>
+        {% endif %}
+        <div style="padding: .5rem;" >
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.item_title|safe }}" title="{{ item.item_title }}"
+                     style="max-height: 60vh; width: 40%; height: auto; border: 0.1rem solid hsl(270, 50%, 60%); border-radius: 0.3125rem; margin-top: -.75rem">
+            {% endif %}
+            {% if item.image2 %}
+                <img src="{{ item.image2.url }}" alt="{{ item.item_title|safe }}" title="{{ item.item_title }}"
+                     style="max-height: 60vh; width: 40%; height: auto; border: 0.1rem solid hsl(270, 50%, 60%); border-radius: 0.3125rem; margin-top: -.75rem">
+            {% endif %}
+        </div>
+        <div style="padding: .5rem">
+            {% if item.image3 %}
+                <img src="{{ item.image3.url }}" alt="{{ item.item_title|safe }}" title="{{ item.item_title }}"
+                     style="max-height: 60vh; width: 40%; height: auto; border: 0.1rem solid hsl(270, 50%, 60%); border-radius: 0.3125rem; margin-top: -.75rem">
+            {% endif %}
+            {% if item.image4 %}
+                <img src="{{ item.image4.url }}" alt="{{ item.item_title|safe }}" title="{{ item.item_title }}"
+                     style="max-height: 60vh; width: 40%; height: auto; border: 0.1rem solid hsl(270, 50%, 60%); border-radius: 0.3125rem; margin-top: -.75rem">
+            {% endif %}
+        </div>
+        <h4 style="margin-top: -.75rem">Description:</h4>
+        <p style="margin-top: -.5rem">{{ item.description }}</p>
+        <!-- Check if item is sold -->
+        {% if item.is_sold and not item.is_preorder%}
+            <p></p>
+        {% else %}
+            <h4 style="margin-top: -.75rem">Price:</h4>
+            <p style="margin-top: -.5rem">${{ item.price }}</p>  
+        {% endif %} 
+        <h4 style="margin-top: -.75rem">Published On:</h4>
+        <p style="margin-top: -.5rem">{{ item.pub_date|date:"M j, Y" }}</p>
+        <div class="d-flex justify-content-left align-items-center" style="margin-top: -1rem">
+            <div>
+                {% if user.is_authenticated %}
+                    <a href="javascript:void(0);" class="like-icon text-dark" data-item-id="{{ item.id }}">
+                        <i class="fa fa-heart fa-2x" style="color: red;" title="Click to like"></i>
+                    </a>
+                {% else %}
+                    <span class="like-icon" data-bs-toggle="modal" data-bs-target="#loginModal" >
+                        <i class="fa fa-heart fa-2x" style="color: red; cursor: pointer;" title="Must be logged in to like"></i>
+                    </span>
+                {% endif %}
+            </div>
+            <div>
+                {% if item.no_of_likes == 0 %}
+                    <p id="like-count-{{ item.id }}"> 's 0</p>
+                {% elif item.no_of_likes == 1 %}
+                    <p id="like-count-{{ item.id }}"> 's {{item.no_of_likes}}</p>
+                {% else %}
+                    <p id="like-count-{{ item.id }}"> 's {{item.no_of_likes}}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        {% if item.choice_set.count > 0 %}
+            <h4 style="color: hsl(270, 50%, 60%);">Vote on Styles For Kay's Crochet To Make:</h4>
+            {% for choice in item.choice_set.all %}
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+            {% endfor %}
+        {% endif %}
+        {% if item.choice_set.count > 0 %}
+            <input type="submit" value="VOTE FOR STYLES" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                   onmouseout="this.style.boxShadow='none'" style="color: hsl(270, 50%, 60%); display: flex; justify-content: center; align-items: center; vertical-align: middle; ">
+            <button type="button" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                    onmouseout="this.style.boxShadow='none'" class="button"
+                    onclick="window.location.href = '{% url 'kayscrochetapp:results' item.id%}'"
+                    style="color: hsl(270, 50%, 60%);">SEE STYLE VOTES</button>
+        {% endif %}
+    </fieldset>
+</form>
+    
+<script>
+// Add click event listener to the like icon in index.html
+document.addEventListener('DOMContentLoaded', function () {
+    var likeIcons = document.querySelectorAll('.like-icon');
+    likeIcons.forEach(function (likeIcon) {
+        likeIcon.addEventListener('click', function () {
+            // Get the item ID from the data attribute
+            var itemId = likeIcon.dataset.itemId;
+
+            // Make an AJAX request to the like_item view
+            $.ajax({
+                type: 'GET',
+                url: '/like_item/?random=' + Math.random(),  // Adding random parameter to prevent caching
+                data: {
+                    'item_id': itemId,
+                },
+                success: function (data) {
+                    // Update the like count and 's on the client side
+                    var likeCountElement = document.querySelector('#like-count-' + itemId);
+
+                    // Check if likeCountElement exists
+                    if (likeCountElement) {
+                        likeCountElement.innerHTML = ' <p id="like-count-' + itemId + '"> \'s ' + data.no_of_likes + '</p>';
+
+                        // Log to verify the updated value
+                        console.log('Updated like count:', data.no_of_likes);
+
+                        // Force a DOM update
+                        likeCountElement.innerHTML = likeCountElement.innerHTML;
+                    } else {
+                        console.log('likeCountElement not found.');
+                    }
+                },
+                error: function (error) {
+                    console.log('Error:', error);
+                }
+            });
+        });
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var isPreorderAvailable = {% if item.is_sold and item.is_preorder %}true{% else %}false{% endif %};
+    var quantityInput = document.getElementById('quantity');
+
+    if (quantityInput) {
+        quantityInput.addEventListener('change', function() {
+            if (!isPreorderAvailable) {
+                var maxQuantity = {{ item.total_quantity }};
+                if (this.value > maxQuantity) {
+                    this.value = maxQuantity;
+                }
+            }
+        });
+    }
+});
+
+</script>
+
+
+{% endblock %}
+{% endif %}

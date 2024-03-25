@@ -1,0 +1,313 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+{% load pwa %}
+{% progressive_web_app_meta %}
+<link rel="manifest" href="manifest.json">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="See beautiful crochet items for sale at Kay's Crochet. Handmade by Kay with love and care.">
+    <title>{% block title %}Kay's Crochet{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'kayscrochetapp/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'kayscrochetapp/images/HaveAGoodDay.png' %}">
+    <style>
+        #search::placeholder {
+            color: hsl(270, 50%, 60%);
+        }
+        .kays-crochet {
+            font-size: 2.5em;
+            margin-top: 1rem;
+        }
+        @media screen and (orientation: landscape) and (max-width: 50rem) {
+            header .container-fluid {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                flex-wrap: nowrap;
+            }
+
+            .kays-crochet {
+                font-size: 1.5em;
+                margin-right: .5rem;
+            }
+
+            main {
+                padding-right: 12%;
+                padding-left: 12%;
+            }
+
+            .imgHeader {
+                margin-left: 4rem;
+
+            }
+
+            header .container-fluid > div,
+            header .container-fluid > div > div {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                flex-grow: 1;
+                margin: 0 5px;
+            }
+
+            header .container-fluid h1 {
+                font-weight: bold;
+                margin: 0;
+                text-align: center;
+                align-self: center;
+            }
+
+            header .container-fluid p {
+                margin: 0;
+                align-self: center;
+            }
+
+            header .container-fluid .imgHeader {
+                margin-right: 10px;
+            }
+    }
+    </style>
+
+    {% block styles %}{% endblock %}
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Header Section -->
+    <header class="py-3 sticky-top bg-danger-subtle flex-shrink-0 fixed-top text-center justify-content-center">
+        <!-- Header Content -->
+        <div class="container-fluid" style="color: hsl(270, 50%, 60%);">
+            <div class="d-flex justify-content-center align-items-center ms-1">
+                <!-- Logo -->
+                <div class="ms-1">
+                    <img class="imgHeader" style="border: 0.1rem solid hsl(270, 50%, 60%);"
+                         src="{% static 'kayscrochetapp/images/HaveAGoodDay.png' %}" alt="Have A Good Day!" title="Have A Good Day!">
+                </div>
+                <!-- Site Title and User Info -->
+                <div class="ms-1">
+                    <h1 style=" color: hsl(270, 50%, 60%);
+                      text-shadow: 2px 2px 6px rgba(100, 100, 150, 0.9);
+                      background: linear-gradient(90deg, hsl(270, 50%, 60%), hsl(270, 50%, 80%));
+                      -webkit-background-clip: text;
+                      background-clip: text;" class="kays-crochet">Kay's Crochet</h1>
+                    {% if user.is_authenticated %}
+                    <!-- User is authenticated -->
+                    <div class="d-flex justify-content-center align-items-center">
+
+                        <!-- Navigation Buttons -->
+                        <button type="button" style="color: hsl(270, 50%, 60%);" class="button ms-1" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                        onmouseout="this.style.boxShadow='none'" onclick="window.location.href = '{% url 'kayscrochetapp:index' %}'">HOME</button>
+                        <button type="button" style="color: hsl(270, 50%, 60%);" class="button ms-1" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                        onmouseout="this.style.boxShadow='none'" onclick="window.location.href = '{% url 'kayscrochetapp:cart' %}'">CART</button>
+                        <div class="me-1">
+                            {% include 'kayscrochetapp/signout.html' %}
+                        </div>
+                        {% else %}
+                        <!-- User is not authenticated -->
+                        <div class="d-flex justify-content-end">
+                            <button type="button" style="color: hsl(270, 50%, 60%);" class="button ms-1" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                            onmouseout="this.style.boxShadow='none'" onclick="window.location.href = '{% url 'kayscrochetapp:index' %}'">HOME</button>
+                            <button type="button" style="color: hsl(270, 50%, 60%);" class="button ms-1" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                            onmouseout="this.style.boxShadow='none'" onclick="window.location.href = '{% url 'kayscrochetapp:signin' %}'">LOGIN</button>
+                            <button type="button" style="color: hsl(270, 50%, 60%);" class="button ms-1" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                            onmouseout="this.style.boxShadow='none'" onclick="window.location.href = '{% url 'kayscrochetapp:signup' %}'">REGISTER</button>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="ms-1 align-items-center">
+                                <p class="ms-1" style="text-transform: uppercase;">Welcome!</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="ms-1 align-items-center">
+                                {% if user.is_authenticated %}
+                                <p class="ms-1" style="text-transform: uppercase;">Welcome {{ user.username }}!</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="ms-1">
+                        {% if user.is_superuser %}
+                            <button type="button" class="button ms-1" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                            onmouseout="this.style.boxShadow='none'" onclick="window.location.href = '{% url 'admin:index' %}'"
+                                    style="color: hsl(270, 50%, 60%);">ADMIN</button>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="button-container d-flex fixed-top ms-5 text-center justify-content-center" style="left: 5%">
+        <!-- Help Modal Button -->
+        <button type="button" class="button bg-danger-subtle" data-bs-toggle="modal"
+            data-bs-target="#exampleModal" style="width: 3.5rem; border: 0.0625rem solid white;
+            color: white; height: 1.6rem;">
+            HELP?
+        </button>
+        <button type="button" class="button bg-danger-subtle" data-bs-toggle="modal"
+            data-bs-target="#exampleModalTwo" style="width: 5rem; border: 0.0625rem solid white;
+            color: white; height: 1.6rem;">
+            <i class="fas fa-download" aria-hidden="true" style="padding: .125rem"></i>Install
+        </button>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: hsl(270, 50%, 60%);">NEED HELP?</h1>
+                    <button type="button" class="close p-2" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times" style="color: hsl(270, 50%, 60%);"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body" style="color: hsl(270, 50%, 60%);">
+                    <!-- Help Content -->
+                    <h1>Add to Cart</h1>
+                    <p>Log in and click <i class="fas fa-cart-plus"></i> at HOME to see its details, then click 
+                        <i class="fas fa-cart-plus"></i><br> or click PREORDER if the item is out of stock.</p>
+                    <h1>Contact Kay's Crochet</h1>
+                    <p>Click the Instagram and TikTok icons below and at www.kayscrochet.us to contact Kay's Crochet.</p>
+                    <h5>Email:</h5>
+                    <p>kayscrochetus@gmail.com</p>
+                           <!-- Policies --> 
+                    <h1>Policy </h1>
+                    <h5>Effective Date: 2023</h5> 
+                    <p>Welcome to Kay's Crochet. This section outlines all Kay's Crochet policies, including our 
+                        Privacy Policy and additional terms related to sales, shipping, and returns. By using Kay's 
+                        Crochet app, you agree to these terms.</p> 
+                    <p>See beautiful crocheted items for sale at Kay's Crochet. Handmade by Kay with love and care.</p>
+                    <h1>Privacy Policy</h1>
+                    <h5>1. Information Collection and Use</h5>
+                    <p><strong>Personal Information Collected:</strong> Email address, mailing address, and full name for transactions and delivery of products.</p>
+                    <p><strong>Purpose:</strong> To process transactions and deliver products purchased through Kay's Crochet. Email is all that is collected to like items.</p>
+                
+                    <h5>2. Data Security</h5>
+                    <p><strong>Measures:</strong> Kay's Crochet secures payments with Stripe(www.stripe.com). User credentials are secured with Django authentication.</p>
+                
+                    <h5>3. Data Sharing</h5>
+                    <p><strong>Policy:</strong> Kay's Crochet does not share, sell, rent, or trade user's personal information with third parties for commercial purposes.</p>
+                
+                    <h5>4. User Rights</h5>
+                    <p><strong>Access and Control:</strong> Users can request to access their data, request corrections or updates, and ask for data deletion via kayscrochetus@gmail.com.</p>
+                
+                    <h5>5. Changes to Privacy Policy</h5>
+                    <p><strong>Notifications:</strong> Policy updates will be communicated via email. Continued use of Kay's Crochet after changes constitutes acceptance of the new terms.</p>
+                
+                    <h5>6. Compliance with Laws</h5>
+                    <p><strong>Adherence:</strong> Following all applicable privacy laws and regulations, including GDPR and CCPA.</p>
+                    
+                    <h5>7. Under 13 Privacy</h5>
+                    
+                    <p><strong>Under 13 Policy:</strong> Kay's Crochet is not directed at or meant for the use of children under the age of 13. We do not knowingly collect or keep personal information of children under the age of 13.</p>
+                    
+                    <h1>Additional Policies</h1>
+                    <h5>8. Sales Tax</h5>
+                    <p><strong>Tax Policy:</strong> Sales tax is not included in the listed prices.</p>
+                
+                    <h5>9. Shipping Policy</h5>
+                    <p><strong>Domestic Shipping:</strong> Shipping is included for the US only.</p>
+                    <p><strong>International Shipping:</strong> Items are not shipped outside the US.</p>
+                
+                    <h5>10. Returns and Refunds</h5>
+                    <p><strong>Policy:</strong> There are no refunds and no returns. An invoice will be emailed upon payment.</p>
+                
+                    <h5>11. Personal Information Usage</h5>
+                    <p><strong>Commitment:</strong> Kay's Crochet does not ever share any personal information.</p>
+                
+                    <p>For any further questions regarding Kay's Crochet policies, please contact Kay's Crochet at kayscrochetus@gmail.com</p>
+                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="button p-2" data-bs-dismiss="modal" style="color: hsl(270, 50%, 60%);"><i class="fas fa-times" style="color: hsl(270, 50%, 60%);"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- InstallApp Modal -->
+    <div class="modal" id="exampleModalTwo" tabindex="-1" aria-labelledby="exampleModalLabelTwo" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabelTwo" style="color: hsl(270, 50%, 60%); font-weight: bold">
+                        Install App On Any Device</h1>
+                    <button type="button" class="button p-2" data-bs-dismiss="modal" style="color: hsl(270, 50%, 60%);"><i class="fas fa-times" style="color: hsl(270, 50%, 60%);"></i></button>
+                </div>
+                <div class="modal-body " style="color: hsl(270, 50%, 60%);">
+                    <h5 style="font-weight: bold;">Download With App Stores:</h5>
+                    <p>Kay's Crochet app is available for download on app stores.</p>
+                    <h5 style="font-weight: bold;">Download With Safari:</h5>
+                    <p>Click Safari's Share icon and then 'Add To Home Screen' from https://www.kayscrochet.us</p>
+                    <h5 style="font-weight: bold;">Download With Any Device:</h5>
+                    <p>Click 'Install App' icon inside your internet browser search bar that displays https://www.kayscrochet.us then click 'Install'</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="button p-2" data-bs-dismiss="modal" style="color: hsl(270, 50%, 60%);"><i class="fas fa-times" style="color: hsl(270, 50%, 60%);"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Section -->
+
+    <main class="flex-grow-1 py-3">
+        {% block content %}{% endblock %}
+    </main>
+
+
+    <!-- Footer Section -->
+    <footer class="py-3 sticky-bottom bg-danger-subtle text-center justify-content-center">
+        <div class="social-icons mt-2" style="color: hsl(270, 50%, 60%);">
+            <!-- Social Media Icons -->
+            <a href="https://www.instagram.com/kayss.crochet" target="_blank" class="me-2"><i
+                    class="fab fa-instagram fa-2x" title="Link to Kay's Crochet Instagram" style="color: hsl(270, 50%, 60%);"></i></a>
+            &copy; 2023 Kay's Crochet
+            <a href="https://www.tiktok.com/@kaysscrochet" target="_blank" class="me-2" style="margin-left: .5rem"><i
+                    class="fab fa-tiktok fa-2x" title="Link to Kay's Crochet TikTok" style="color: hsl(270, 50%, 60%);"></i></a>
+        </div>
+    </footer>
+
+</body>
+
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous">
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('{% static "serviceworker.js" %}')
+      .then(function(registration) {
+        console.log('Service Worker registered with scope:', registration.scope);
+      })
+      .catch(function(error) {
+        console.error('Service Worker registration failed:', error);
+      });
+  }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    let deferredInstallPrompt = null;
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('beforeinstallprompt', function (event) {
+            // Prevent the default install prompt
+            event.preventDefault();
+
+            // Save the event for later use
+            deferredInstallPrompt = event;
+        });
+    }
+</script>
+
+{% block scripts %}{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}{{ item.item_title }} Likes{% endblock %}
+
+{% if user.is_authenticated %}
+{% block content %}
+
+<form>
+    <fieldset style="color: hsl(270, 50%, 60%); border: 0.0625rem solid hsl(270, 50%, 60%);">
+        <legend><h1 style="text-transform: uppercase;   color: hsl(270, 50%, 60%);
+              text-shadow: 2px 2px 6px rgba(100, 100, 150, 0.9); /* Darkened shadow color and closer position */
+              background: linear-gradient(90deg, hsl(270, 50%, 60%), hsl(270, 50%, 80%));
+              -webkit-background-clip: text;
+              background-clip: text;">{{ item.item_title }} STYLE VOTES</h1></legend>
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.item_title }}">
+            {% endif %}
+
+    <ul>
+        {% for choice in item.choice_set.all %}
+            <li>{{ choice.choice_text }} -- {{ choice.likes }} Selected</li>
+        {% endfor %}
+        </ul>
+        <div class="d-flex justify-content-left align-items-center">
+            <div>
+            <label>Go Back:</label>
+            </div>
+            <div>
+            <button style="color: hsl(270, 50%, 60%);" type="button" class="button" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                    onmouseout="this.style.boxShadow='none'" onclick="window.location.href = '{% url 'kayscrochetapp:detail' item.id%}'">ITEM DETAILS</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+{% endblock %}
+{% endif %}

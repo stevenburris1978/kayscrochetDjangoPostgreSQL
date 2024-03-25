@@ -1,0 +1,97 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}REGISTER - Kay's Crochet{% endblock %}
+
+{% block content %}
+    <div class="flex-grow-1" style="color: hsl(270, 50%, 60%);">
+        <form method="post">
+            <fieldset style="border: 0.0625rem solid hsl(270, 50%, 60%);">
+            <legend style="  color: hsl(270, 50%, 60%);
+                    text-shadow: 2px 2px 6px rgba(100, 100, 150, 0.9); /* Darkened shadow color and closer position */
+                    background: linear-gradient(90deg, hsl(270, 50%, 60%), hsl(270, 50%, 80%));
+                    -webkit-background-clip: text;
+                    background-clip: text;">REGISTER FOR KAY'S CROCHET:</legend>
+                {% csrf_token %}
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                {{ form.as_p }}
+                <button onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'" 
+                        onmouseout="this.style.boxShadow='none'" type="submit" style="color: hsl(270, 50%, 60%); font-weight: normal;">REGISTER</button>
+                <p>Click LOGIN if You Have Already Created an Account:</p>
+                <div>
+                    <button type="button" class="button" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                            onmouseout="this.style.boxShadow='none'" onclick="window.location.href = '{% url 'kayscrochetapp:signin' %}'" style="color: hsl(270, 50%, 60%);">LOGIN</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div>
+        <button type="button" class="button" data-bs-toggle="modal" data-bs-target="#policyModal" style="color: hsl(270, 50%, 60%);">
+            POLICY
+        </button>
+    </div>
+    <!-- Policy Modal -->
+    <div class="modal fade" id="policyModal" tabindex="-1" aria-labelledby="policyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="policyModalLabel" style="color: hsl(270, 50%, 60%);">Kay's Crochet Policy</h3>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times" style="color: hsl(270, 50%, 60%);"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body" style="color: hsl(270, 50%, 60%);">
+                    <div>
+                           <!-- Policies -->
+                        <h5>Effective Date: 2023</h5> 
+                        <p>Welcome to Kay's Crochet. This section outlines all Kay's Crochet policies, including our Privacy Policy and additional terms related to sales, shipping, and returns. By using Kay's Crochet app, you agree to these terms.</p>
+                        <p>See beautiful crocheted items for sale at www.kayscrochet.us  Handmade by Kay with love and care.</p>
+                        <h3>Privacy Policy:</h3>
+                        <h5>1. Information Collection and Use</h5>
+                        <p><strong>Personal Information Collected:</strong> Email address, mailing address, and other necessary information for transactions and delivery of products.</p>
+                        <p><strong>Purpose:</strong> To process transactions and deliver products purchased through Kay's Crochet. Email is all that is collected to like items.</p>
+                    
+                        <h5>2. Data Security</h5>
+                        <p><strong>Measures:</strong> Kay's Crochet secures payments with Stripe(www.stripe.com). User credentials are secured with Django authentication.</p>
+                    
+                        <h5>3. Data Sharing</h5>
+                        <p><strong>Policy:</strong> Kay's Crochet does not share, sell, rent, or trade user's personal information with third parties for commercial purposes.</p>
+                    
+                        <h5>4. User Rights</h5>
+                        <p><strong>Access and Control:</strong> Users can request to access their data, request corrections or updates, and ask for data deletion via kayscrochetus@gmail.com.</p>
+                    
+                        <h5>5. Changes to Privacy Policy</h5>
+                        <p><strong>Notifications:</strong> Policy updates will be communicated via email. Continued use of Kay's Crochet after changes constitutes acceptance of the new terms.</p>
+                    
+                        <h5>6. Compliance with Laws</h5>
+                        <p><strong>Adherence:</strong> Following all applicable privacy laws and regulations, including GDPR and CCPA.</p>
+                        
+                        <h5>7. Under 13 Privacy</h5>
+                    
+                        <p><strong>Under 13 Policy:</strong> Kay's Crochet is not directed at or meant for the use of children under the age of 13. We do not knowingly collect or keep personal information of children under the age of 13.</p>
+                    
+                        <h3>Additional Policies:</h3>
+                        <h5>8. Sales Tax</h5>
+                        <p><strong>Tax Policy:</strong> Sales tax is not included in the listed prices.</p>
+                    
+                        <h5>19. Shipping Policy</h5>
+                        <p><strong>Domestic Shipping:</strong> Shipping is included for the US only.</p>
+                        <p><strong>International Shipping:</strong> Items are not shipped outside the US.</p>
+                    
+                        <h5>10. Returns and Refunds</h5>
+                        <p><strong>Policy:</strong> There are no refunds and no returns. An invoice will be emailed upon payment.</p>
+                    
+                        <h5>11. Personal Information Usage</h5>
+                        <p><strong>Commitment:</strong> Kay's Crochet does not ever share any personal information.</p>
+                    
+                        <p>For any further questions regarding Kay's Crochet policies, please contact Kay's Crochet at kayscrochetus@gmail.com</p>
+                    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button" data-bs-dismiss="modal" style="color: hsl(270, 50%, 60%);"><i class="fas fa-times" style="color: hsl(270, 50%, 60%);"></i></button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

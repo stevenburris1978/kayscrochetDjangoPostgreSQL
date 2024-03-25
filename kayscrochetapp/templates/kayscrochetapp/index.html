@@ -1,0 +1,256 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Kay's Crochet{% endblock %}
+
+{% block content %}
+    <div style=" margin-left: 3.5rem;">
+        <h4 style="text-transform: uppercase;   color: hsl(270, 50%, 60%);
+              text-shadow: 2px 2px 6px rgba(100, 100, 150, 0.9);
+              background: linear-gradient(90deg, hsl(270, 50%, 60%), hsl(270, 50%, 80%));
+              -webkit-background-clip: text;
+              background-clip: text; margin-top: -.5rem; margin-right: 2rem">All Items Handmade By Kay</h4>
+    </div>
+    <!-- Search and Sorting -->
+    <div style="display: flex; align-items: center; margin-left: 1rem;">
+        <!-- Search bar -->
+        <input style=" height: 1.8rem;" type="text" id="search" placeholder="  Search by item title">
+        <!-- Sorting dropdown -->
+        <select id="sortDropdown" style="border: 0.0625rem solid hsl(270, 50%, 60%);
+            color: hsl(270, 50%, 60%); height: 1.8rem; border-radius: 0.3125rem; background-color: #F7E7F8;">
+            <option value="newest">Sort: Newest</option>
+            <option value="price">Sort: Price</option>
+        </select>
+    </div>
+
+        <!-- Items list -->
+    {% if latest_item_list %}
+        <ul id="itemList">
+        {% for item in latest_item_list %}
+            <li data-price="{{ item.price }}" data-date="{{ item.pub_date }}">
+                <form>
+                    <div style="margin-left: -1rem; margin-right: 1rem">
+                        <fieldset style="color: hsl(270, 50%, 60%); border: 0.0625rem solid hsl(270, 50%, 60%); ">
+                            <legend style="margin-bottom: 0">
+
+                                {% if item.is_sold and not item.is_preorder %}
+                                    <h3><button style="height: 1.8rem; position: relative; overflow: hidden; display: flex; align-items: center; " onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                                                    onmouseout="this.style.boxShadow='none'">
+                                    <a style="text-decoration: none; text-transform: uppercase;   color: hsl(270, 50%, 60%);
+                                        text-shadow: 2px 2px 6px rgba(100, 100, 150, 0.9);
+                                        background: linear-gradient(90deg, hsl(270, 50%, 60%), hsl(270, 50%, 80%));
+                                        -webkit-background-clip: text;
+                                        background-clip: text;"
+                                        href="{% url 'kayscrochetapp:detail' item.id %}" title="{{ item.item_title|upper }} - Click To See Details">
+                                        {{ item.item_title }} </a></button></h3>
+                                {% elif item.is_sold and item.is_preorder %}
+                                    <div style="display: flex; align-items: center; ">
+                                        <h3 style="margin: 0; padding-right: 10px; text-decoration: none; text-transform: uppercase; color: hsl(270, 50%, 60%);
+                                                    text-shadow: 2px 2px 6px rgba(100, 100, 150, 0.9);
+                                                    background: linear-gradient(90deg, hsl(270, 50%, 60%), hsl(270, 50%, 80%));
+                                                    -webkit-background-clip: text;
+                                                    background-clip: text;">
+                                            {{ item.item_title }}
+                                        </h3>
+                                        <a style="font-size: medium ; margin: .5rem; border-radius: 0.3125rem; border: none; height: 1.6rem; width: 6rem;
+                                        display: flex; align-items: center; justify-content: center; background-color: lavenderblush;
+                                        text-decoration: none; color: hsl(270, 50%, 60%); "
+                                           onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'" onmouseout="this.style.boxShadow='none'"
+                                           href="{% url 'kayscrochetapp:detail' item.id %}" title="{{ item.item_title|upper }} - Click To See Details">
+                                            PREORDER
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div style="display: flex; align-items: center; ">
+                                        <h3 style="margin: 0; padding-right: 10px; text-decoration: none; text-transform: uppercase; color: hsl(270, 50%, 60%);
+                                                    text-shadow: 2px 2px 6px rgba(100, 100, 150, 0.9);
+                                                    background: linear-gradient(90deg, hsl(270, 50%, 60%), hsl(270, 50%, 80%));
+                                                    -webkit-background-clip: text;
+                                                    background-clip: text;">
+                                            {{ item.item_title }}
+                                        </h3>
+                                        <a style="margin: .5rem; border-radius: 0.3125rem; border: none; height: 1.6rem; width: 1.6rem;
+                                        display: flex; align-items: center; justify-content: center; background-color: lavenderblush;
+                                        text-decoration: none; color: hsl(270, 50%, 60%);"
+                                           onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'" onmouseout="this.style.boxShadow='none'"
+                                           href="{% url 'kayscrochetapp:detail' item.id %}" title="{{ item.item_title|upper }} - Click To See Details">
+                                            <i class="fas fa-cart-plus " style="font-size: 82%;"></i>
+                                        </a>
+                                    </div>
+
+                                {% endif %}
+
+                            </legend>
+                            {% if item.total_quantity > 0 %}
+                                <div><p>  {{ item.total_quantity }} still available</p></div>
+                            {% else %}
+                                <div><p>Out of Stock</p></div>
+                            {% endif %}
+                            <div style="padding: .5rem;" >
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" alt="{{ item.item_title|safe }}" title="{{ item.item_title }}"
+                                         style="width: 40%; max-height: 60vh; height: auto; border: 0.1rem solid hsl(270, 50%, 60%); border-radius: 0.3125rem; margin-top: -.75rem">
+                                {% endif %}
+                                {% if item.image2 %}
+                                    <img src="{{ item.image2.url }}" alt="{{ item.item_title|safe }}" title="{{ item.item_title }}"
+                                         style="max-height: 60vh; width: 40%; height: auto; border: 0.1rem solid hsl(270, 50%, 60%); border-radius: 0.3125rem; margin-top: -.75rem">
+                                {% endif %}
+                            </div>
+                            <div style="padding: .5rem">
+                                {% if item.image3 %}
+                                    <img src="{{ item.image3.url }}" alt="{{ item.item_title|safe }}" title="{{ item.item_title }}"
+                                         style="max-height: 60vh; width: 40%; height: auto; border: 0.1rem solid hsl(270, 50%, 60%); border-radius: 0.3125rem; margin-top: -.75rem">
+                                {% endif %}
+                                {% if item.image4 %}
+                                    <img src="{{ item.image4.url }}" alt="{{ item.item_title|safe }}" title="{{ item.item_title }}"
+                                         style="max-height: 60vh; width: 40%; height: auto; border: 0.1rem solid hsl(270, 50%, 60%); border-radius: 0.3125rem; margin-top: -.75rem">
+                                {% endif %}
+                            </div>
+                            <h4 style="margin-top: -.75rem">Description:</h4>
+                            <p style="margin-top: -.5rem">{{ item.description }}</p>
+                            <!-- Check if item is sold -->
+                            {% if item.is_sold and not item.is_preorder%}
+                                <p></p>
+                            {% else %}
+                                <h4 style="margin-top: -.75rem">Price:</h4>
+                                <p style="margin-top: -.5rem">${{ item.price }}</p>
+                            {% endif %}
+                            <div class="d-flex justify-content-left align-items-center" style="margin-top: -1rem">
+                                <div>
+                                    {% if user.is_authenticated %}
+                                        <a href="javascript:void(0);" class="like-icon text-dark" data-item-id="{{ item.id }}" title="Click To Like">
+                                            <i class="fa fa-heart fa-2x" style="color: red;"></i>
+                                        </a>
+                                    {% else %}
+                                        <span class="like-icon" data-bs-toggle="modal" data-bs-target="#loginModal" title="Must Be Logged In To like">
+                                            <i class="fa fa-heart fa-2x" style="color: red; cursor: pointer;"></i>
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    {% if item.no_of_likes == 0 %}
+                                        <p id="like-count-{{ item.id }}"> 's 0</p>
+                                    {% elif item.no_of_likes == 1 %}
+                                        <p id="like-count-{{ item.id }}"> 's {{item.no_of_likes}}</p>
+                                    {% else %}
+                                        <p id="like-count-{{ item.id }}"> 's {{item.no_of_likes}}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- Modal for login message -->
+                            <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="loginModalLabel">TO LIKE: CLICK LOGIN OR REGISTER</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <button type="button" class="button ms-1" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                                                    onmouseout="this.style.boxShadow='none'" onclick="window.location.href = '{% url 'kayscrochetapp:signin' %}'"
+                                                    style="color: hsl(270, 50%, 60%);">LOGIN</button>
+                                            <button type="button" class="button ms-1" onmouseover="this.style.boxShadow='0 0 10px rgba(0, 0, 0, 0.5)'"
+                                                    onmouseout="this.style.boxShadow='none'" onclick="window.location.href = '{% url 'kayscrochetapp:signup' %}'"
+                                                    style="color: hsl(270, 50%, 60%);">REGISTER</button>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="button p-2" data-bs-dismiss="modal" style="color: hsl(270, 50%, 60%);">
+                                                <i class="fas fa-times" style="color: hsl(270, 50%, 60%);"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </form>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p style="margin-left: 3rem; padding: .5rem" >No items are available.</p>
+    {% endif %}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+// Add click event listener to the like icon in index.html
+document.addEventListener('DOMContentLoaded', function () {
+    var likeIcons = document.querySelectorAll('.like-icon');
+    likeIcons.forEach(function (likeIcon) {
+        likeIcon.addEventListener('click', function () {
+            // Get the item ID from the data attribute
+            var itemId = likeIcon.dataset.itemId;
+
+            // Make an AJAX request to the like_item view
+            $.ajax({
+                type: 'GET',
+                url: '/like_item/?random=' + Math.random(),  // Adding random parameter to prevent caching
+                data: {
+                    'item_id': itemId,
+                },
+                success: function (data) {
+                    // Update the like count and 's on the client side
+                    var likeCountElement = document.querySelector('#like-count-' + itemId);
+
+                    // Check if likeCountElement exists
+                    if (likeCountElement) {
+                        likeCountElement.innerHTML = ' <p id="like-count-' + itemId + '"> \'s ' + data.no_of_likes + '</p>';
+
+                        // Log to verify the updated value
+                        console.log('Updated like count:', data.no_of_likes);
+
+                        // Force a DOM update
+                        likeCountElement.innerHTML = likeCountElement.innerHTML;
+                    } else {
+                        console.log('likeCountElement not found.');
+                    }
+                },
+                error: function (error) {
+                    console.log('Error:', error);
+                }
+            });
+        });
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
+    $('#sortDropdown').on('change', function() {
+        var sortType = $(this).val();
+
+        if (sortType === 'newest') {
+            // Reload the page
+            window.location.reload();
+        } else if (sortType === 'price') {
+            try {
+                var itemsList = $('#itemList').children('li').get();
+                itemsList.sort(function(a, b) {
+                    return $(a).data('price') - $(b).data('price');
+                });
+                $.each(itemsList, function(idx, itm) { $('#itemList').append(itm); });
+            } catch (error) {
+                console.error('Error occurred during sorting by price:', error);
+            }
+        }
+    });
+
+    //Search functionality
+    $('#search').on('input', function() {
+        var searchQuery = $(this).val().toLowerCase();
+
+        if(searchQuery === '') {
+            // If the search query is empty, show all items
+            $('#itemList li').show();
+        } else {
+            $('#itemList li').each(function() {
+                var itemTitle = $(this).find('h3').text().toLowerCase();
+                if (itemTitle.includes(searchQuery)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+    });
+});
+</script>
+    
+{% endblock %}
+

@@ -1,0 +1,96 @@
+li a {
+    color: darkblue;
+}
+
+body {
+    background: white url("images/background.39d54520e0d6.png") no-repeat center center fixed;
+    background-size: cover;
+    width: 100%;
+}
+
+nav {
+    padding: 1rem;
+}
+
+h2 {
+    padding: .5rem;
+    margin-left: 3rem;
+    text-transform: uppercase;
+}
+
+h2 {
+    text-transform: uppercase;
+}
+
+input {
+    margin: .5rem;
+}
+
+fieldset {
+    border: 0.0625rem solid #000;
+    padding: 0.3125rem;
+    margin: .5rem;
+    border-radius: 0.3125rem;
+}
+
+header {
+    border-radius: 0.3125rem;
+}
+
+footer {
+    border-radius: 0.3125rem;
+    width: 100%;
+}
+
+ul {
+    list-style-type: none;
+}
+
+button {
+    margin: .5rem;
+    border-radius: 0.3125rem;
+    border: none;
+    height: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: lavenderblush;
+    color: black;
+}
+
+.button:hover {
+    box-shadow: 0 0 .625rem rgba(0, 0, 0, 0.5);
+}
+
+input {
+    margin: .5rem;
+    border-radius: 0.5rem;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: lavenderblush;
+}
+
+.imgHeader {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 2.5rem;
+    margin: .25rem;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    height: 2rem;
+}
+
+textarea {
+    height: 4rem;
+}
+
+input, textarea {
+    font-size: 1rem;
+}
+
+
