@@ -1,7 +1,5 @@
-## INF601VA - Advanced Programming in Python
+## Advanced Programming in Python
 # Steven Burris
-# 11-10-2023
-# *Final Project SBurris*
 # *Kay's Crochet App*
 
 # Github commits to Main Branch instead of Master at: 
